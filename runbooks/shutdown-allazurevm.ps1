@@ -8,14 +8,21 @@ workflow shutdown-allazurevm {
         $Credential = Get-AutomationPSCredential `
             -Name 'AzurePowerShell';
 
+        Write-Output $Credential
+        
+        Write-Output "Logging in"
+
         Login-AzureRmAccount `
             -Credential $Credential;
 
+        Write-Output "Getting subscriptions"
+
         $subs = Get-AzureRmSubscription
+
         $VMs = @()
         foreach ($sub in $subs)
         {
-            "Getting VMs for Subscription '$sub.SubscriptionName'";
+            Write-Output "Getting VMs for Subscription '$sub.SubscriptionName'";
             Select-AzureRmSubscription -SubscriptionName ($sub.SubscriptionName)
             $VMs += @(Get-AzureRmVM);
         }
@@ -24,14 +31,14 @@ workflow shutdown-allazurevm {
         {
             foreach ($VM in $VMs)
             {
-                "Stopping '$VM.Name'";
+                Write-Output "Stopping '$VM.Name'";
                 Stop-AzureRmVM -Name ($VM.Name);
-                "Stopped '$VM.Name'";
+                Write-Output "Stopped '$VM.Name'";
             }
         }
         else
         {
-            "No VMs found";
+            Write-Output "No VMs found";
         }
     }
 }
