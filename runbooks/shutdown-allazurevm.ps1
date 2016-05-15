@@ -5,13 +5,13 @@ workflow shutdown-allazurevm
     {
         foreach ($VM in $VMs)
         {
-            Write-Host "Stopping $VM.Name"
-            Stop-AzureVM -Name ($VM.Name)
-            Write-Host "Stopped $VM.Name"
+            "Stopping '$VM.Name'"
+            $null = Stop-AzureVM -Name ($VM.Name)
+            "Stopped '$VM.Name'"
         }
     }
     else
     {
-        Write-Host "No VMs found"
+        "No VMs found"
     }
 }
